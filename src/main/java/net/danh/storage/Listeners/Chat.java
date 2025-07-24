@@ -23,6 +23,7 @@ public class Chat implements Listener {
     public static HashMap<Player, String> chat_deposit = new HashMap<>();
     public static HashMap<Player, String> chat_withdraw = new HashMap<>();
     public static HashMap<Player, String> chat_sell = new HashMap<>();
+    public static HashMap<Player, Integer> chat_return_page = new HashMap<>();
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onChat(@NotNull AsyncPlayerChatEvent e) {
@@ -31,37 +32,37 @@ public class Chat implements Listener {
         if (chat_deposit.containsKey(p) && chat_deposit.get(p) != null) {
             if (Number.getInteger(message) > 0) {
                 new Deposit(p, chat_deposit.get(p), (long) Number.getInteger(message)).doAction();
-                Bukkit.getScheduler().runTask(Storage.getStorage(), () ->
-                        p.openInventory(new PersonalStorage(p).getInventory()));
+                int returnPage = chat_return_page.getOrDefault(p, PersonalStorage.getPlayerCurrentPage(p));
+                Bukkit.getScheduler().runTask(Storage.getStorage(), () -> p.openInventory(new PersonalStorage(p, returnPage).getInventory()));
             } else {
-                p.sendMessage(net.danh.storage.Utils.Chat.colorize(Objects.requireNonNull(File.getMessage().getString("user.unknown_number"))
-                        .replace("<number>", message)));
+                p.sendMessage(net.danh.storage.Utils.Chat.colorize(Objects.requireNonNull(File.getMessage().getString("user.unknown_number")).replace("<number>", message)));
             }
             chat_deposit.remove(p);
+            chat_return_page.remove(p);
             e.setCancelled(true);
         }
         if (chat_withdraw.containsKey(p) && chat_withdraw.get(p) != null) {
             if (Number.getInteger(message) > 0) {
                 new Withdraw(p, chat_withdraw.get(p), Number.getInteger(message)).doAction();
-                Bukkit.getScheduler().runTask(Storage.getStorage(), () ->
-                        p.openInventory(new PersonalStorage(p).getInventory()));
+                int returnPage = chat_return_page.getOrDefault(p, PersonalStorage.getPlayerCurrentPage(p));
+                Bukkit.getScheduler().runTask(Storage.getStorage(), () -> p.openInventory(new PersonalStorage(p, returnPage).getInventory()));
             } else {
-                p.sendMessage(net.danh.storage.Utils.Chat.colorize(Objects.requireNonNull(File.getMessage().getString("user.unknown_number"))
-                        .replace("<number>", message)));
+                p.sendMessage(net.danh.storage.Utils.Chat.colorize(Objects.requireNonNull(File.getMessage().getString("user.unknown_number")).replace("<number>", message)));
             }
             chat_withdraw.remove(p);
+            chat_return_page.remove(p);
             e.setCancelled(true);
         }
         if (chat_sell.containsKey(p) && chat_sell.get(p) != null) {
             if (Number.getInteger(message) > 0) {
                 new Sell(p, chat_sell.get(p), Number.getInteger(message)).doAction();
-                Bukkit.getScheduler().runTask(Storage.getStorage(), () ->
-                        p.openInventory(new PersonalStorage(p).getInventory()));
+                int returnPage = chat_return_page.getOrDefault(p, PersonalStorage.getPlayerCurrentPage(p));
+                Bukkit.getScheduler().runTask(Storage.getStorage(), () -> p.openInventory(new PersonalStorage(p, returnPage).getInventory()));
             } else {
-                p.sendMessage(net.danh.storage.Utils.Chat.colorize(Objects.requireNonNull(File.getMessage().getString("user.unknown_number"))
-                        .replace("<number>", message)));
+                p.sendMessage(net.danh.storage.Utils.Chat.colorize(Objects.requireNonNull(File.getMessage().getString("user.unknown_number")).replace("<number>", message)));
             }
             chat_sell.remove(p);
+            chat_return_page.remove(p);
             e.setCancelled(true);
         }
     }

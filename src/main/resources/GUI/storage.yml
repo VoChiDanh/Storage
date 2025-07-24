@@ -6,8 +6,7 @@ items:
   # Decorates item
   decorates:
     # If you want to put it on 1 slot | slot: 1 | if you want put it in many slot, do like this
-    slot: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48,
-      49, 50, 51, 52, 53
+    slot: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 26, 27, 35, 36, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53
     # Display name of item
     name: "&7 "
     # Material | 1.12.2 and below can use STAINED_GLASS_PANE:15
@@ -81,5 +80,37 @@ items:
     enchants:
       DURABILITY: 1
     # Flag for item | If you use ALL: true -> All flag will be applied to item
+    flags:
+      ALL: true
+  # Previous page
+  previous_page:
+    slot: 48
+    name: "&c◀ Previous Page"
+    material: ARROW
+    lore:
+      - "&7Click to go to previous page"
+      - "&7Current: Page &a#current_page#&7/&e#total_pages#"
+    amount: 1
+    damage: 0
+    custom-model-data: 1
+    unbreakable: true
+    enchants:
+      DURABILITY: 1
+    flags:
+      ALL: true
+  # Next page
+  next_page:
+    slot: 50
+    name: "&a▶ Next Page"
+    material: ARROW
+    lore:
+      - "&7Click to go to next page"
+      - "&7Current: Page &a#current_page#&7/&e#total_pages#"
+    amount: 1
+    damage: 0
+    custom-model-data: 1
+    unbreakable: true
+    enchants:
+      DURABILITY: 1
     flags:
       ALL: true

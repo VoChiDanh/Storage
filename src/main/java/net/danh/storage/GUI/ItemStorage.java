@@ -25,18 +25,23 @@ public class ItemStorage implements IGUI {
 
     private final String material;
     private final FileConfiguration config;
+    private final int returnPage;
 
     public ItemStorage(Player p, String material) {
+        this(p, material, 0);
+    }
+
+    public ItemStorage(Player p, String material, int returnPage) {
         this.p = p;
         this.material = material;
+        this.returnPage = returnPage;
         config = File.getItemStorage();
     }
 
     @NotNull
     @Override
     public Inventory getInventory() {
-        Inventory inventory = Bukkit.createInventory(p, config.getInt("size") * 9, Chat.colorizewp(Objects.requireNonNull(config.getString("title")).replace("#player#", p.getName())
-                .replace("#material#", Objects.requireNonNull(File.getConfig().getString("items." + material, material.split(";")[0])))));
+        Inventory inventory = Bukkit.createInventory(p, config.getInt("size") * 9, Chat.colorizewp(Objects.requireNonNull(config.getString("title")).replace("#player#", p.getName()).replace("#material#", Objects.requireNonNull(File.getConfig().getString("items." + material, material.split(";")[0])))));
         for (String item_tag : Objects.requireNonNull(config.getConfigurationSection("items")).getKeys(false)) {
             String slot = Objects.requireNonNull(config.getString("items." + item_tag + ".slot")).replace(" ", "");
             if (slot.contains(",")) {
@@ -51,31 +56,34 @@ public class ItemStorage implements IGUI {
                             if (action_left.equalsIgnoreCase("deposit")) {
                                 if (type_left.equalsIgnoreCase("chat")) {
                                     net.danh.storage.Listeners.Chat.chat_deposit.put(p, material);
+                                    net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                     p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.deposit.chat_number")));
                                     p.closeInventory();
                                 } else if (type_left.equalsIgnoreCase("all")) {
                                     new Deposit(p, material, -1L).doAction();
-                                    p.openInventory(new PersonalStorage(p).getInventory());
+                                    p.openInventory(new PersonalStorage(p, returnPage).getInventory());
                                 }
                             }
                             if (action_left.equalsIgnoreCase("withdraw")) {
                                 if (type_left.equalsIgnoreCase("chat")) {
                                     net.danh.storage.Listeners.Chat.chat_withdraw.put(p, material);
+                                    net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                     p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.withdraw.chat_number")));
                                     p.closeInventory();
                                 } else if (type_left.equalsIgnoreCase("all")) {
                                     new Withdraw(p, material, -1).doAction();
-                                    p.openInventory(new PersonalStorage(p).getInventory());
+                                    p.openInventory(new PersonalStorage(p, returnPage).getInventory());
                                 }
                             }
                             if (action_left.equalsIgnoreCase("sell")) {
                                 if (type_left.equalsIgnoreCase("chat")) {
                                     net.danh.storage.Listeners.Chat.chat_sell.put(p, material);
+                                    net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                     p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.sell.chat_number")));
                                     p.closeInventory();
                                 } else if (type_left.equalsIgnoreCase("all")) {
                                     new Sell(p, material, -1).doAction();
-                                    p.openInventory(new PersonalStorage(p).getInventory());
+                                    p.openInventory(new PersonalStorage(p, returnPage).getInventory());
                                 }
                             }
                             if (type_left.equalsIgnoreCase("command")) {
@@ -93,16 +101,18 @@ public class ItemStorage implements IGUI {
                             if (action_right.equalsIgnoreCase("deposit")) {
                                 if (type_right.equalsIgnoreCase("chat")) {
                                     net.danh.storage.Listeners.Chat.chat_deposit.put(p, material);
+                                    net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                     p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.deposit.chat_number")));
                                     p.closeInventory();
                                 } else if (type_right.equalsIgnoreCase("all")) {
                                     new Deposit(p, material, -1L).doAction();
-                                    p.openInventory(new PersonalStorage(p).getInventory());
+                                    p.openInventory(new PersonalStorage(p, returnPage).getInventory());
                                 }
                             }
                             if (action_right.equalsIgnoreCase("withdraw")) {
                                 if (type_right.equalsIgnoreCase("chat")) {
                                     net.danh.storage.Listeners.Chat.chat_withdraw.put(p, material);
+                                    net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                     p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.withdraw.chat_number")));
                                     p.closeInventory();
                                 } else if (type_right.equalsIgnoreCase("all")) {
@@ -113,6 +123,7 @@ public class ItemStorage implements IGUI {
                             if (action_right.equalsIgnoreCase("sell")) {
                                 if (type_right.equalsIgnoreCase("chat")) {
                                     net.danh.storage.Listeners.Chat.chat_sell.put(p, material);
+                                    net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                     p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.sell.chat_number")));
                                     p.closeInventory();
                                 } else if (type_right.equalsIgnoreCase("all")) {
@@ -143,31 +154,34 @@ public class ItemStorage implements IGUI {
                         if (action_left.equalsIgnoreCase("deposit")) {
                             if (type_left.equalsIgnoreCase("chat")) {
                                 net.danh.storage.Listeners.Chat.chat_deposit.put(p, material);
+                                net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                 p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.deposit.chat_number")));
                                 p.closeInventory();
                             } else if (type_left.equalsIgnoreCase("all")) {
                                 new Deposit(p, material, -1L).doAction();
-                                p.openInventory(new PersonalStorage(p).getInventory());
+                                p.openInventory(new PersonalStorage(p, returnPage).getInventory());
                             }
                         }
                         if (action_left.equalsIgnoreCase("withdraw")) {
                             if (type_left.equalsIgnoreCase("chat")) {
                                 net.danh.storage.Listeners.Chat.chat_withdraw.put(p, material);
+                                net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                 p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.withdraw.chat_number")));
                                 p.closeInventory();
                             } else if (type_left.equalsIgnoreCase("all")) {
                                 new Withdraw(p, material, -1).doAction();
-                                p.openInventory(new PersonalStorage(p).getInventory());
+                                p.openInventory(new PersonalStorage(p, returnPage).getInventory());
                             }
                         }
                         if (action_left.equalsIgnoreCase("sell")) {
                             if (type_left.equalsIgnoreCase("chat")) {
                                 net.danh.storage.Listeners.Chat.chat_sell.put(p, material);
+                                net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                 p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.sell.chat_number")));
                                 p.closeInventory();
                             } else if (type_left.equalsIgnoreCase("all")) {
                                 new Sell(p, material, -1).doAction();
-                                p.openInventory(new PersonalStorage(p).getInventory());
+                                p.openInventory(new PersonalStorage(p, returnPage).getInventory());
                             }
                         }
                         if (type_left.equalsIgnoreCase("command")) {
@@ -185,31 +199,34 @@ public class ItemStorage implements IGUI {
                         if (action_right.equalsIgnoreCase("deposit")) {
                             if (type_right.equalsIgnoreCase("chat")) {
                                 net.danh.storage.Listeners.Chat.chat_deposit.put(p, material);
+                                net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                 p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.deposit.chat_number")));
                                 p.closeInventory();
                             } else if (type_right.equalsIgnoreCase("all")) {
                                 new Deposit(p, material, -1L).doAction();
-                                p.openInventory(new PersonalStorage(p).getInventory());
+                                p.openInventory(new PersonalStorage(p, returnPage).getInventory());
                             }
                         }
                         if (action_right.equalsIgnoreCase("withdraw")) {
                             if (type_right.equalsIgnoreCase("chat")) {
                                 net.danh.storage.Listeners.Chat.chat_withdraw.put(p, material);
+                                net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                 p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.withdraw.chat_number")));
                                 p.closeInventory();
                             } else if (type_right.equalsIgnoreCase("all")) {
                                 new Withdraw(p, material, -1).doAction();
-                                p.openInventory(new PersonalStorage(p).getInventory());
+                                p.openInventory(new PersonalStorage(p, returnPage).getInventory());
                             }
                         }
                         if (action_right.equalsIgnoreCase("sell")) {
                             if (type_right.equalsIgnoreCase("chat")) {
                                 net.danh.storage.Listeners.Chat.chat_sell.put(p, material);
+                                net.danh.storage.Listeners.Chat.chat_return_page.put(p, returnPage);
                                 p.sendMessage(Chat.colorize(File.getMessage().getString("user.action.sell.chat_number")));
                                 p.closeInventory();
                             } else if (type_right.equalsIgnoreCase("all")) {
                                 new Sell(p, material, -1).doAction();
-                                p.openInventory(new PersonalStorage(p).getInventory());
+                                p.openInventory(new PersonalStorage(p, returnPage).getInventory());
                             }
                         }
                         if (type_right.equalsIgnoreCase("command")) {
@@ -238,5 +255,9 @@ public class ItemStorage implements IGUI {
 
     public String getMaterial() {
         return material;
+    }
+
+    public int getReturnPage() {
+        return returnPage;
     }
 }
